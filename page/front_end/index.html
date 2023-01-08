@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>图书馆热点分析</title>
+	<link rel="stylesheet" type="text/css"
+		href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+	<link rel="stylesheet" href="../../LayuiMini/css/index2.css">
+	<!-- 引用高德 -->
+	<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+	<script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+	<script type="text/javascript"
+		src="http://webapi.amap.com/maps?v=1.4.15&key=716729469337ea7471df5ab500a640bf"></script>
+	<script type="text/javascript" src="//webapi.amap.com/loca?v=1.3.2&key=716729469337ea7471df5ab500a640bf"></script>
+	<style>
+		/* 实现多点标注marker的动态信息窗体显示的CSS样式代码 */
+		.mian {
+			list-style-type: none;
+			margin: 0px;
+		}
+
+		.main li {
+			font-size: 10px;
+			background: white;
+			padding: 0 5px;
+		}
+
+		.main li span {
+			font-size: 10px;
+		}
+
+		/* 查询搜索栏的位置 */
+		#tip {
+			display: flex;
+			margin-right: 70%;
+			margin-top: -5px;
+		}
+
+		#tip .input-search {
+			width: 70px;
+			margin-left: 15px;
+			border: 1px solid #337ab7;
+			display: flex;
+			justify-content: center;
+			background-color: #337ab7;
+		}
+
+		/* 搜索结果列表显示 */
+		#panel {
+			display: none;
+			/* 默认情况不显示 */
+			position: absolute;
+			background-color: white;
+			max-height: 90%;
+			overflow-y: auto;
+			top: 90px;
+			left: 150px;
+			width: 350px;
+			height: 400px;
+			box-shadow: 0px 0px 3px 3px #aaa;
+		}
+
+		#panel span {
+			position: absolute;
+			top: 0;
+			left: 0;
+			padding-top: 5px;
+			padding-left: 5px;
+		}
+
+		#panel h3 {
+			display: flex;
+			color: #337ab7;
+			justify-content: center;
+			margin-top: 10px;
+			margin-bottom: 10px;
+			/* background-color: pink; */
+		}
+
+		#panel #list {
+			display: block;
+			height: 180px;
+			margin-left: 10px;
+			/* background-color: brown; */
+		}
+
+		#panel #list:hover {
+			color: #337ab7;
+		}
+
+		#panel #list div {
+			font-size: 14px;
+		}
+
+		#container {
+			margin: 0;
+			padding: 0;
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="container">
+	</div>
+
+	<div>
+		<!-- 搜索栏 -->
+		<div class="info" id="tip">
+			<input type="text" id="iptSelect" placeholder="请输入筛选条件">
+			<button class="input-search">查询</button>
+		</div>
+		<!-- 刷选条件显示区域 -->
+		<div id="panel">
+			<span class="close_list"><img src="../../LayuiMini/images/close.png" alt=""></span>
+			<h3>疫情隔离场所搜索结果</h3>
+			<!-- <a href="#" id="list"> -->
+			<!-- id name area -->
+			<!-- </a> -->
+		</div>
+		<div class="input-card" style="width: auto; height: auto;margin-right: 36%;">
+			<div class="input-item">
+				<label class="btn" id="showLab">显示图书馆位置:</label>
+				<select id="areas" style="cursor: pointer;font-size: 10px;margin-left: 10px;">
+					<option value="zero">无</option>
+					<option value="wuhan">武汉市</option>
+					<option value="hubei">湖北省</option>
+					<option value="china">全国</option>
+				</select>
+				<!-- <button class="btn" id="removeLab">移除图书馆坐标</button> -->
+				<label class="btn" onclick="heatmap.show()" style="margin-left: 20px;">显示热力图:</label>
+				<select id="heatmaps" style="cursor: pointer;font-size: 10px;margin-left: 10px;">
+					<option value="zero">无</option>
+					<option value="wuhan">武汉市</option>
+					<option value="hubei">湖北省</option>
+					<option value="china">全国</option>
+				</select>
+				<label class="btn" onclick="heatmap.show()" style="margin-left: 20px;">改变背景颜色:</label>
+				<select id="background" style="cursor: pointer;font-size: 10px;margin-left: 10px;">
+					<option value="标准">标准</option>
+					<option value="远山黛">远山黛</option>
+					<option value="极夜蓝">极夜蓝</option>
+					<option value="涂鸦">涂鸦</option>
+					<option value="月光银">月光银</option>
+				</select>
+				<!-- <button class="btn" onclick="heatmap.hide()">关闭热力图</button> -->
+			</div>
+		</div>
+	</div>
+
+	<script src="https://webapi.amap.com/maps?v=2.0&key=716729469337ea7471df5ab500a640bf"></script>
+	<script src="../../LayuiMini/js/book.js"></script>
+	<script src="../../LayuiMini/js/hubei_book.js"></script>
+	<script src="../../LayuiMini/js/China_book.js"></script>
+	<!-- <script src="../../LayuiMini/js/index.js"></script> -->
+	<script>
+		var map = new AMap.Map('container', {
+			resizeEnable: true,
+			zoom: 10,
+			center: [114.347428, 30.509923],
+			feature: ['bg', 'road'],
+			viewMode: '2D', // 开启 3D 模式
+			pitch: 0,  //地图倾斜角度   查看参考手册
+			// rotation: 0,
+			mapStyle: 'amap://styles/normal'
+		});
+
+		//判断浏览区是否支持canvas
+		if (!isSupportCanvas()) {
+			alert('热力图仅对支持canvas的浏览器适用,您所使用的浏览器不能使用热力图功能,请换个浏览器试试~')
+		}
+
+		// 加载各种控件
+		AMap.plugin(['AMap.ToolBar', 'AMap.Scale', 'AMap.ControlBar'],
+			function () {
+				map.addControl(new AMap.ToolBar())
+				map.addControl(new AMap.Scale())
+				map.addControl(new AMap.ControlBar());
+			})
+
+
+		//展示/隐藏热力图
+		var heatmap;
+		map.plugin(["AMap.HeatMap"], function () {
+			//初始化heatmap对象
+			heatmap = new AMap.HeatMap(map, {
+				radius: 25, //给定半径
+				opacity: [0, 0.8]
+			});
+			//设置数据集：该数据为北京部分“公园”数据
+			// heatmap.setDataSet({
+			// 	data: heatmapData,
+			// 	// max: 100
+			// 	max: 2
+			// });
+		});
+
+		$('#heatmaps').on('change', () => {
+			let $bg = $('#heatmaps')
+			if ($bg.val() == 'zero') {
+				heatmap.setDataSet({
+					data: {},
+					// max: 100
+					max: 2
+				});
+				// console.log(heatmap)
+			}
+			else if ($bg.val() == 'wuhan') {
+				//设置数据集：该数据为武汉市
+				heatmap.setDataSet({
+					data: heatmapData,
+					// max: 100
+					max: 2
+				});
+				// console.log(heatmap)
+			}
+			else if ($bg.val() == 'hubei') {
+				heatmap.setDataSet({
+					data: heatmapData_hubei,
+					// max: 100
+					max: 2
+				})
+				// console.log(heatmap)
+			}
+			else if ($bg.val() == 'china') {
+				//设置数据集：该数据为全国数据
+				heatmap.setDataSet({
+					data: heatmapData_China,
+					// max: 100
+					max: 2
+				});
+			}
+		})
+
+		// 背景颜色
+		$('#background').on('change', () => {
+			let $bg = $('#background')
+			if ($bg.val() == '标准') {
+				map.setMapStyle('amap://styles/normal')
+			}
+			else if ($bg.val() == '远山黛') {
+				map.setMapStyle('amap://styles/whitesmoke')
+			}
+			else if ($bg.val() == '极夜蓝') {
+				map.setMapStyle('amap://styles/darkblue')
+			}
+			else if ($bg.val() == '涂鸦') {
+				map.setMapStyle('amap://styles/graffiti')
+			}
+			else if ($bg.val() == '月光银') {
+				map.setMapStyle('amap://styles/light')
+			}
+		})
+
+		// 显示点数据
+		var markers = []
+
+		$('#areas').on('change', () => {
+			let $bg = $('#areas')
+			if ($bg.val() == 'zero') {
+				map.remove(markers)
+			}
+			else if ($bg.val() == 'wuhan') {
+				map.remove(markers)
+				showPoint(heatmapData)
+				// markers.setMap(map)
+			}
+			else if ($bg.val() == 'hubei') {
+				map.remove(markers)
+				showPoint(heatmapData_hubei)
+				// markers.setMap(map)
+			}
+			else if ($bg.val() == 'china') {
+				map.remove(markers)
+				showPoint(heatmapData_China)
+				// markers.setMap(map)
+			}
+		})
+
+		function showPoint(database) {
+			for (var i = 0; i < database.length; i++) {
+				let marker = new AMap.Marker({
+					map: map,
+					// icon: "//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png",
+					position: [database[i]['lng'], database[i]['lat']],
+					offset: new AMap.Pixel(-13, -30),
+				});
+				markers.push(marker)
+
+				marker.id = database[i]['id']
+				marker.name = database[i]['name']
+				marker.cityname = database[i]['cityname']
+				marker.province = database[i]['province']
+				marker.lng = database[i]['lng']
+				marker.lat = database[i]['lat']
+				marker.on('mouseover', (database) => {
+					infoWindow.setContent(
+						"<ul class='main'><li> ID: <span style='color:blue'>" + database.target.id + "</span></li>"
+						+ "<li>  酒店名 : <span style='color:blue'>" + database.target.name + "  </span></li>"
+						+ "<li>  经度 : <span style='color:blue'>" + database.target.lng + "  </span></li>"
+						+ "<li>  纬度 : <span style='color:blue'>" + database.target.lat + "  </span></li>"
+						+ "<li>  城市名 : <span style='color:blue'>" + database.target.cityname + "  </span></li>"
+						+ "<li>  省市名 : <span style='color:blue'>" + database.target.province + "  </span></li></ul>");
+					infoWindow.open(map, database.lnglat);
+				});
+				marker.on('mouseout', (database) => {
+					infoWindow.close(map, database.lnglat)
+				});
+			}
+
+			var infoWindow = new AMap.InfoWindow({
+				isCustom: true,
+				draggable: true,  //是否可拖动
+				offset: new AMap.Pixel(0, -31),
+				content: ""
+			});
+		}
+
+
+		function isSupportCanvas() {
+			var elem = document.createElement('canvas');
+			return !!(elem.getContext && elem.getContext('2d'));
+		}
+
+		// 测试数据
+		var data = [{ "ID": '0001', 'name': '湖北省图书馆', 'area': '武昌区', 'log': '114.301074', 'lat': '30.533111', 'meg': '面向所有人', },
+		{ "ID": '0002', 'name': '云曰书馆', 'area': '武昌区', 'log': '114.309591', 'lat': '30.547346	', 'meg': '面向所有人', },
+		{ "ID": '0003', 'name': '武汉大学图书馆医学分馆', 'area': '江汉区', 'log': '114.252537', 'lat': '30.62365', 'meg': '面向所有人', },
+		{ "ID": '0004', 'name': '武汉理工大学余家头校区图书馆', 'area': '洪山区', 'log': '114.398147	', 'lat': '30.500495', 'meg': '面向所有人', },
+		]
+		// 查询按钮点击 在搜索框下方显示
+		// 实际代码中根据搜索框关键字 返回筛选的信息进行如下操作
+		// 方便后期删除数据
+		var markers = []
+		$(".input-search").on('click', function () {
+
+			document.getElementById('panel').style.display = 'block';
+			var marker;
+			for (var i = 0; i < data.length; i++) { //for-begin
+				// 在搜索弹出列表 中生成每个点的信息 
+				var list_a = $("<a id='list'><div>ID：" + data[i].ID + "</div>"
+					+ "<div>图书馆名：" + data[i].name + "</div>"
+					+ "<div>所属区：" + data[i].area + "</div>"
+					+ "<div>经度：" + data[i].log + "</div>"
+					+ "<div>纬度：" + data[i].lat + "</div>"
+					+ "<div>详细信息：" + data[i].meg + "</div></a>")
+				$("#panel").append(list_a);
+
+
+				// 实现多点标注marker的动态信息窗体显示
+				var jfong = [data[i].log, data[i].lat];
+				marker = new AMap.Marker({
+					position: jfong,
+					zIndex: 101,
+					map: map,
+					icon: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b' + (i + 1) + '.png',
+					// icon:'https://a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
+				});
+
+				// 方便后期删除数据
+				markers[i] = marker
+				marker.setMap(map);
+				marker.ID = data[i].ID;
+				marker.name = data[i].name;
+				marker.area = data[i].area;
+				marker.bed = data[i].bed;
+				marker.log = data[i].log;
+				marker.lat = data[i].lat;
+				marker.meg = data[i].meg;
+				marker.on('mouseover', function (e) {
+					// alert("你好")
+					infoWindow.setContent("<ul class='main'><li> ID： <span style='color:blue'>" + e.target.ID + "</span></li>"
+						+ "<li>  隔离场所名 : <span style='color:blue'>" + e.target.name + "  </span></li>"
+						+ "<li>  所属区 : <span style='color:blue'>" + e.target.area + "  </span></li>"
+						+ "<li>  床位 : <span style='color:blue'>" + e.target.bed + "  </span></li>"
+						+ "<li>  经度 : <span style='color:blue'>" + e.target.log + "  </span></li>"
+						+ "<li>  纬度 : <span style='color:blue'>" + e.target.lat + "  </span></li>"
+						+ "<li>  详细信息 : <span style='color:blue'>" + e.target.meg + "  </span></li></ul>");//// e.target表示被点击的目标
+					infoWindow.open(map, e.lnglat);
+				});
+				marker.on('mouseout', function (e) {
+					infoWindow.close(map, e.lnglat);
+				})
+
+				// 鼠标点击事件,设置地图中心点及放大显示级别   新增！！！
+				marker.on('click', function (e) {
+					//map.setCenter(e.target.getPosition());
+					map.setZoomAndCenter(15, e.target.getPosition());
+					// marker.setIcon('http://webapi.amap.com/theme/v1.3/markers/n/mark_r.png');
+					// 不管点击那个点 都是最后一个图标变化
+
+					var infoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -30) });
+					infoWindow.setContent(e.target.content);
+					infoWindow.open(map, e.target.getPosition());
+				})
+
+				// map.on('click',function(e){
+				//     map.remove([marker])
+				//     marker = new AMap.Marker({
+				//         icon:'https://a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
+				//         position:[e.lnglat.lng,e.lnglat.lat],
+				//         offset:new AMap.Pixel(-10,-20)
+				//     });
+				//     map.add([marker]);
+				// })
+			} //for-end
+			var infoWindow = new AMap.InfoWindow({
+				isCustom: true,
+				draggable: true,  //是否可拖动
+				offset: new AMap.Pixel(0, -31),
+				content: ""
+			});
+			// 获取列表点击时候 移到对应点
+			// 这个a指的是列表的a
+			$(document).ready(function () {
+				var num
+				$("a").mouseover(function () {
+					// alert($(this).html())
+					var array = new Array();//声明一个新的数组
+					var all = $(this).children().each(function (index, element) {//遍历每个对象
+						array.push($(this).html());//往数组中存入值
+					})
+					num = array[0].substr(3)
+					// 循环判断点击的列表序号 对应的点标记
+					for (var i = 0; i < data.length; i++) {
+						// alert(markers[i].ID==num)
+						if (markers[i].ID == num) {
+							markers[i].setIcon('http://webapi.amap.com/theme/v1.3/markers/n/mark_r' + (i + 1) + '.png')
+							// icon: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b' + (i + 1) + '.png',  默认的蓝色
+						}
+					}
+					// var zoom =  20; //zoom大小 无法修改
+					// map.panTo([x,y]);  //改变中心点位置
+					// 点击时 移动到点标记
+					$("a").click(function () {
+						if (markers[i].ID == num) {
+							e = markers[i]
+							// 点击时 放大地图 有待实现
+							map.setZoomAndCenter(15, e.target.getPosition());
+						}
+					})
+				})
+
+
+				// 移出时全部变回蓝色
+				$("a").mouseout(function () {
+					for (var i = 0; i < data.length; i++) {
+						// alert(markers[i].ID==num)
+						markers[i].setIcon('https://webapi.amap.com/theme/v1.3/markers/n/mark_b' + (i + 1) + '.png')
+					}
+				})
+			})
+		})
+		$(".close_list").on('click', function () {
+			document.getElementById('panel').style.display = 'none';
+			map.remove(markers);
+			$("#panel a").remove();
+		})
+	</script>
+</body>
+
+</html>
