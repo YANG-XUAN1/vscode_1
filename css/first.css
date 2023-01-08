@@ -1,0 +1,101 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body li {
+    list-style: none;
+}
+
+body a {
+
+    text-decoration: none;
+}
+
+/* <!-- 上方页面 --> */
+.header {
+    height: 486px;
+    /* width: 1024px; */
+    width: 100%;
+    /* background-color: #a6b1e1; */
+}
+
+.header .top {
+    height: 46px;
+    width: 1024px;
+    margin: 0 auto;
+    padding-top: 13px;
+    display: flex;
+    /* margin-top: 13px; */
+}
+
+.top h3 {
+    line-height: 46px;
+    font-size: 18px;
+    color: white;
+    padding-left: 20px;
+}
+
+.top ul {
+    display: flex;
+    line-height: 46px;
+    padding-left: 400px;
+}
+
+.top ul li {
+    padding-right: 30px;
+}
+
+.top ul li a {
+    font-size: 16px;
+    color: white;
+}
+
+.top ul li a:hover {
+    color: black;
+}
+
+/* 鼠标移动到链接上 */
+
+/* <!-- 上方中间版心 --> */
+.header .mid {
+    width: 1024px;
+    height: 427px;
+    /* background-color: pink; */
+    margin: 0 auto;
+}
+
+.mid h3 {
+    display: flex;
+    font-size: 45px;
+    color: white;
+    justify-content: center;
+    padding-top: 60px;
+    padding-bottom: 62px;
+    font-weight: 400;
+    /* margin: 0 auto; */
+}
+
+.mid h4 {
+    display: flex;
+    justify-content: center;
+    color: white;
+    font-size: 21px;
+    font-weight: 400;
+    padding-bottom: 25px;
+}
+
+.mid .btn {
+    border: solid 2px black;
+    height: 40px;
+    width: 100px;
+    margin: 0 auto;
+}
+
+.mid .btn a {
+    display: flex;
+    justify-content: center;
+    color: black;
+    font-size: 18px;
+    line-height: 40px;
+}
