@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>疫情隔离场所管理系统</title>
+    <link rel="stylesheet" href="./LayuiMini/css/first.css">
+    <link rel="icon" href="./LayuiMini/images/favicon.ico">
+    <link rel="stylesheet" href="./LayuiMini/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="./LayuiMini/css/layuimini.css?v=2.0.4.2" media="all">
+    <link rel="stylesheet" href="./LayuiMini/css/themes/default.css" media="all">
+    <link rel="stylesheet" href="./LayuiMini/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <style>
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            min-width: 1000px;
+            z-index: -10;
+            zoom: 1;
+            background-color: #fff;
+            background: url(./LayuiMini/images/bg.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+            -webkit-background-size: cover;
+            -o-background-size: cover;
+            background-position: center 0;
+            background-color: rgba(220, 38, 38, 0.1);
+            /* //可以设置背景颜色透明而文字不透明 */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div>
+            <ul class="layui-nav" lay-filter="">
+                <li class="layui-nav-item">
+                    <div>
+                        <a onclick="history.go(-1)">
+                            <img src="./LayuiMini/images/loginbg.png" alt="logo" style="height: 50px;width: 80px;">
+                        </a>
+                    </div>
+                </li>
+                <li class="layui-nav-item"><a href="#">首页</a></li>
+                <li class="layui-nav-item"><a href="./page/front_end.html">热力图实现</a></li>
+                <li class="layui-nav-item"><a href="./page/back_end.html" target="_blank">信息管理</a></li>
+                <!-- <li class="layui-nav-item"><a href="http://localhost:5550/userAll" target="_blank">隔离场所管理</a></li> -->
+                <li class="layui-nav-item">
+                    <a href="javascript:;">用户</a>
+                    <dl class="layui-nav-child">
+                        <!-- 二级菜单 -->
+                        <dd><a href="./page/front_end/login.html">登录</a></dd>
+                        <dd><a href="./page/front_end/reguser.html">注册</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+        <div class="mid">
+            <h3 style="color: black;">图书馆热力图功能实现系统</h3>
+            <h4><b style="color: aqua;">基于高德API实现地图可视化</b></h4>
+            <h4>图书馆热力图是利用该区域的图书馆数量和分布范围,通过图书馆数量渲染地图颜色。实现展示该地区图书馆的密度，
+                关键就是数据的获取(坐标信息)。本系统中的城市图书馆热力图就可以告诉我们该城市图书馆的多少，哪个城市城市
+                哪个区域图书馆分布较多或较少，以便于用户了解各城市的图书馆密度。</h4>
+            <br>
+            <br>
+            <div class="btn">
+                <a href="./page/front_end.html">查看地图</a>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="./LayuiMini/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="./LayuiMini/js/lay-config.js?v=2.0.0" charset="utf-8"></script>
+    <script>
+        //注意：导航 依赖 element 模块，否则无法进行功能性操作
+        layui.use('element', function () {
+            var element = layui.element;
+        });
+    </script>
+</body>
+
+</html>

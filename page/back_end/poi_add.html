@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>添加点</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../LayuiMini/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../LayuiMini/css/public.css" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="layui-form login-bottom">
+        <div class="layui-form layuimini-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">经度</label>
+                <div class="layui-input-block">
+                    <input type="text" name="longitude" lay-verify="required" lay-reqtext="经度不能为空" placeholder="请输入经度"
+                        value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">纬度</label>
+                <div class="layui-input-block">
+                    <input type="text" name="latitude" lay-verify="required" lay-reqtext="纬度不能为空" placeholder="请输入经度"
+                        value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">酒店名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="required" lay-reqtext="酒店名称不能为空" placeholder="请输入酒店名称"
+                        value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">酒店区域</label>
+                <div class="layui-input-block">
+                    <input type="text" name="address" placeholder="请输入酒店所在区域" value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">介绍</label>
+                <div class="layui-input-block">
+                    <input type="text" name="introduce" placeholder="请输入酒店介绍" value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">空房间数</label>
+                <div class="layui-input-block">
+                    <input type="text" name="room" placeholder="请输入酒店空房间数" value="" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script src="../../LayuiMini/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form,
+                layer = layui.layer,
+                $ = layui.$;
+
+            //监听提交
+            form.on('submit(saveBtn)', function (data) {
+                // var index = layer.alert(JSON.stringify(data.field), {
+                //     title: '最终的提交信息'
+                // }, function () {
+
+                //     // 关闭弹出层
+                //     layer.close(index);
+
+                //     var iframeIndex = parent.layer.getFrameIndex(window.name);
+                //     parent.layer.close(iframeIndex);
+
+                // });
+
+                // return false;
+                data = data.field;
+                console.log(data)
+
+                $.ajax({
+                    url: 'http://127.0.0.1:8080/pois/addPoi',
+                    data: data,
+                    method: 'post',
+                    headers: { 'Accept': 'application/json', 'Authorization': localStorage.getItem('token') },
+                    success: (res) => {
+                        if (res.status == 0) {
+                            layer.msg('添加成功');
+                        } else {
+                            layer.msg('添加失败')
+                        }
+                    }
+                })
+
+                return false;
+            });
+
+        });
+    </script>
+</body>
+
+</html>
