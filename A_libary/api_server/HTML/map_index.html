@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>疫情隔离场所管理系统</title>
+	<link rel="stylesheet" type="text/css"
+		href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+	<link rel="stylesheet" type="text/css" href=".\css\Tab.css" />
+	<link rel="stylesheet" href=".\css\index.css">
+	<link rel="stylesheet" href="./css/first.css">
+	<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<!-- 引用高德 -->
+	<script type="text/javascript"
+		src="http://webapi.amap.com/maps?v=1.4.15&key=2b97342de44e1baf617dbf3f437cc864"></script>
+	<script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+</head>
+
+
+<body>
+	<script type="text/javascript" src="./JS/index.js"></script>
+
+	<div id="container"></div>
+
+	<div>
+		<div id="login">
+			<!-- <div class="wrapper"> -->
+			<!-- 主导航 -->
+			<div id="nav">
+				<h3>酒店查询logo</h3>
+				<!-- class="clearfix" -->
+				<ul>
+					<li>
+						<a href="first.html">首页</a>
+					</li>
+					<li>
+						<a href="aa">隔离场所查询</a>
+					</li>
+					<li>
+						<a href="aa">隔离场所管理</a>
+					</li>
+					<li>
+						<button class="btn" id="loginBtn">登录/注册</button>
+					</li>
+				</ul>
+				<!-- <div>
+					<button class="btn" id="loginBtn">登录/注册</button>
+				</div> -->
+			</div>
+
+		</div>
+
+		<div class="input-top" style=" color: #00FFFF; 
+			border: ipx solid beige ; width: 100px; height: auto;">
+			<div>
+				<select id="background" style="cursor: pointer;font-size: 10px;">
+					<option value="标准">标准</option>
+					<option value="远山黛">远山黛</option>
+					<option value="极夜蓝">极夜蓝</option>
+					<option value="涂鸦">涂鸦</option>
+					<option value="月光银">月光银</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="input-card" style="width: auto; height: auto;">
+			<div class="input-item">
+				<button class="btn" id="showLab">显示图书馆位置</button>
+				<button class="btn" id="removeLab">移除图书馆坐标</button>
+			</div>
+			<div class="input-item">
+				<button class="btn" id="viewRoad">显示/隐藏实时路况</button>
+			</div>
+			<div class="input-item" id="hot_map">
+				<button class="btn" onclick="heatmap.show()">显示热力图</button>
+				&nbsp;&nbsp;
+				<button class="btn" onclick="heatmap.hide()">关闭热力图</button>
+			</div>
+		</div>
+	</div>
+
+
+
+</body>
+
+</html>

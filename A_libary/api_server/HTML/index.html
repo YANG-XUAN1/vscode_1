@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>疫情隔离场所管理系统</title>
+  <link rel="stylesheet" href="./css/first.css">
+  <link rel="stylesheet" href="layui-v2.6.8/layui-v2.6.8/layui/css/layui.css">
+  <style>
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      min-width: 1000px;
+      z-index: -10;
+      zoom: 1;
+      background-color: #fff;
+      background: url(./imgs/1_3.jpeg);
+      background-repeat: no-repeat;
+      background-size: cover;
+      -webkit-background-size: cover;
+      -o-background-size: cover;
+      background-position: center 0;
+      background-color: rgba(220, 38, 38, 0.1);
+      /* //可以设置背景颜色透明而文字不透明 */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <div>
+      <ul class="layui-nav" lay-filter="">
+        <li class="layui-nav-item">
+          <div>
+            <a href="#">
+              <img src="../../../LayuiMini\LayuiMini\images\loginbg.png" alt="logo" style="height: 50px;width: 80px;">
+            </a>
+          </div>
+        </li>
+        <li class="layui-nav-item"><a href="#">首页</a></li>
+        <li class="layui-nav-item"><a href="">隔离场所查询</a></li>
+        <li class="layui-nav-item"><a href="../../../LayuiMini/index.html">隔离场所管理</a></li>
+        <li class="layui-nav-item">
+          <a href="javascript:;">用户</a>
+          <dl class="layui-nav-child">
+            <!-- 二级菜单 -->
+            <dd><a href="login.html">登录</a></dd>
+            <dd><a href="reguser.html">注册</a></dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+    <div class="mid">
+      <h3>疫情隔离场所管理系统</h3>
+      <h4>专业的疫情隔离点查询网站</h4>
+      <h4>基于openlayers实现地图可视化</h4>
+      <div class="btn">
+        <a href="map_index.html">查看地图</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="layui-v2.6.8/layui-v2.6.8/layui/layui.js"></script>
+  <script>
+    //注意：导航 依赖 element 模块，否则无法进行功能性操作
+    layui.use('element', function () {
+      var element = layui.element;
+
+      //…
+    });
+  </script>
+</body>
+
+</html>
